@@ -1,0 +1,27 @@
+{
+  "name": "GeekQuiz",
+  "version": "1",
+  "homepage": "https://github.com/ap1ter/GeekQuiz",
+  "authors": [
+    "Andrey P <pfm@live.ru>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/vendor",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "angular": "~1.4.7",
+    "angular-route": "~1.4.7",
+    "angular-resource": "~1.4.7",
+    "toastr": "~2.1.2"
+  }
+}
