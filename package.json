@@ -11,6 +11,8 @@
   "dependencies": {
     "express": "^4.13.3",
     "jade": "^1.11.0",
-    "nodemon": "^1.8.1"
+    "morgan": "^1.6.1",
+    "nodemon": "^1.8.1",
+    "stylus": "^0.52.4"
   }
 }
