@@ -9,7 +9,7 @@
   "engines":{
     "node":"4.0.x",
     "npm":"2.14.x"
-  }
+  },
   "author": "Andrey P",
   "license": "ISC",
   "dependencies": {
