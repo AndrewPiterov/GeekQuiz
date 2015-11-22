@@ -1,48 +1,48 @@
 var express = require("express"),
-    stylus = require("stylus"),
-    logger = require('morgan'),
-    mongoose = require('mongoose');
+    mongoose = require('mongoose'),
+    passport = require('passport'),
+    LocalStrategy = require('passport-local').Strategy;
 
 var env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 var app = express();
 
-function compile(str, path) {
-    return stylus(str).set('filename', path);
-}
+var config = require("./server/config/config")[env];
 
-app.set('views', __dirname + '/server/views');
-app.set('view engine', 'jade');
-app.use(logger('dev'));
+require('./server/config/express')(app, config);
 
-app.use(stylus.middleware({
-    src: __dirname + '/public',
-    compile: compile
-}));
+require('./server/config/mongoose')(config);
 
-app.use(express.static(__dirname + '/public'));
+var User = mongoose.model('User');
+passport.use(new LocalStrategy(
+    function (username, passport, done) {
+        User.findOne({userName: username}).exec(function (err, user) {
+            if (user) {
+                return done(null, user);
+            } else {
+                return done(null, false);
+            }
+        });
+    }
+));
 
-if (env === 'development') {
-    mongoose.connect('mongodb://localhost/geekquiz');
-} else {
-    mongoose.connect('mongodb://geek:geekquiz@ds053764.mongolab.com:53764/geekquiz');
-}
-
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error...'));
-db.once('open', function () {
-    console.log('geekquiz db opened')
+passport.serializeUser(function (user, done) {
+    if (user) done(null, user._id);
 });
 
-app.get('/partials/:partialPath', function (req, res) {
-    res.render('partials/' + req.params.partialPath)
+passport.deserializeUser(function (id, done) {
+
+    User.findOne({_id: id}).exec(function (err, user) {
+        if (user) {
+            return done(null, user);
+        } else {
+            return done(null, false);
+        }
+    });
 });
 
-app.get('*', function (req, res) {
-    res.render('index');
-});
+require('./server/config/routes')(app);
 
-var port = process.env.PORT || 3030;
-app.listen(port, function () {
-    console.log('Listening on port ' + port + "...");
+app.listen(config.port, function () {
+    console.log('Listening on port ' + config.port + "...");
 });
